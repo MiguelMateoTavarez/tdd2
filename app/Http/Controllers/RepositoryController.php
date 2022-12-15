@@ -26,13 +26,21 @@ class RepositoryController extends Controller
             'description' => 'required'
         ]);
 
+        if($request->user()->id != $repository->user_id) {
+            abort(403);
+        }
+
         $repository->update($request->all());
 
         return redirect()->route('repositories.edit', $repository);
     }
 
-    public function destroy(Repository $repository)
+    public function destroy(Request $request, Repository $repository)
     {
+        if($request->user()->id != $repository->user_id) {
+            abort(403);
+        }
+
         $repository->delete();
 
         return redirect()->route('repositories.index');
