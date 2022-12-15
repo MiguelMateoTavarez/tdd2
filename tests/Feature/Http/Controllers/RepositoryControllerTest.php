@@ -13,6 +13,30 @@ class RepositoryControllerTest extends TestCase
     use WithFaker;
     use RefreshDatabase;
 
+    public function test_index_empty()
+    {
+        Repository::factory()->create();
+        $user = User::factory()->create();
+
+        $this
+            ->actingAs($user)
+            ->get('repositories')
+            ->assertStatus(200)
+            ->assertSee('No hay repositorios creados');
+    }
+
+    public function test_index_with_data()
+    {
+        $user = User::factory()->create();
+        $repository = Repository::factory()->create(['user_id' => $user->id]);
+
+        $this
+            ->actingAs($user)
+            ->get('repositories')
+            ->assertStatus(200)
+            ->assertSee($repository->id);
+    }
+
     public function test_guest()
     {
         $this->get('repositories')->assertRedirect('login');            //index
@@ -128,5 +152,29 @@ class RepositoryControllerTest extends TestCase
             ->actingAs($user)
             ->delete("repositories/$repository->id")
             ->assertStatus(403);    
+    }
+
+    public function test_show()
+    {
+        $user = User::factory()->create();
+
+        $repository = Repository::factory()->create(['user_id' => $user->id]);
+
+        $this
+            ->actingAs($user)
+            ->get("repositories/$repository->id")
+            ->assertStatus(200);
+    }
+
+    public function test_show_policy()
+    {
+        $user = User::factory()->create();
+
+        $repository = Repository::factory()->create();
+
+        $this
+            ->actingAs($user)
+            ->get("repositories/$repository->id")
+            ->assertStatus(403);            
     }
 }
