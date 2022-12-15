@@ -44,7 +44,6 @@ class RepositoryControllerTest extends TestCase
     public function test_update()
     {
         $repository = Repository::factory()->create();
-        
         $data = [
             'url' => $this->faker->url,
             'description' => $this->faker->text,
@@ -58,5 +57,47 @@ class RepositoryControllerTest extends TestCase
             ->assertRedirect("repositories/$repository->id/edit");
             
         $this->assertDatabaseHas('repositories', $data);
+    }
+
+    public function test_validate_store()
+    {
+
+        $user = User::factory()->create();
+
+        $this
+            ->actingAs($user)
+            ->post('repositories', [])
+            ->assertStatus(302)
+            ->assertSessionHasErrors(['url', 'description']);
+    }
+
+    public function test_validate_update()
+    {
+        $repository = Repository::factory()->create();
+        $user = User::factory()->create();
+
+        $this
+            ->actingAs($user)
+            ->put("repositories/$repository->id", [])
+            ->assertStatus(302)
+            ->assertSessionHasErrors(['url', 'description']);            
+    }
+
+    public function test_destroy()
+    {
+        $repository = Repository::factory()->create();
+
+        $user = User::factory()->create();
+
+        $this
+            ->actingAs($user)
+            ->delete("repositories/$repository->id")
+            ->assertRedirect('repositories');
+
+        $this->assertDatabaseMissing('repositories', [
+            'id' => $repository->id,
+            'url' => $repository->url,
+            'description' => $repository->description
+        ]);
     }
 }
