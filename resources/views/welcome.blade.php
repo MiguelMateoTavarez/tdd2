@@ -16,13 +16,18 @@
                     alt="" 
                     class="w-12 h-12 rounded-full mr-2"
                 >
-                <div class="flex justify-between w-full">
-                    <div class=""></div>
-                    <span></span>
+                <div class="flex justify-betewwn w-full">
+                    <div class="flex-1">
+                        <h2 class="text-sm font-semibold text-black">
+                            {{ $repository->url }}
+                        </h2>
+                        <p>{{ $repository->description }}</p>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600">
+                        {{ $repository->created_at->diffForHumans() }}
+                    </span>
                 </div>
             </li>
-                <h2>{{ $repository->url }}</h2>
-                <p>{{ $repository->description }}</p>
             @endforeach
         </ul>
     </body>
