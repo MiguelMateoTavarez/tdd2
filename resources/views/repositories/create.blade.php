@@ -15,9 +15,7 @@
                     <input class="form-input w-full rounded-md shadow-sm" type="text" name="url" id="">
 
                     <label for="" class="block font-medium text-sm text-gray-700">Descripcion *</label>
-                    <textarea class="form-input w-full rounded-md shadow-sm" type="text" name="description">
-                        
-                    </textarea>
+                    <textarea class="form-input w-full rounded-md shadow-sm" type="text" name="description"></textarea>
 
                     <hr class="my-4">
 
